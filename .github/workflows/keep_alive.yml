@@ -1,16 +1,17 @@
-name: Supabase Keep-Alive
+name: Supabase Keep Alive
 
 on:
   schedule:
-    - cron: '0 9 * * 1,4' # Runs every Monday and Thursday at 9:00 AM UTC
-  workflow_dispatch: # This allows you to test it manually
+    - cron: '0 9 * * 1,4' # Run at 9:00 AM UTC on Mondays (1) and Thursdays (4)
+  workflow_dispatch:      # Allows manual triggering from the Actions tab
 
 jobs:
-  ping_supabase:
+  keep-alive:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Heartbeat Query
+      - name: Ping Supabase Database
         run: |
-          curl -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/profiles?select=id&limit=1" \
+          curl -i -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/profiles?select=*" \
           -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Range: 0-0"
